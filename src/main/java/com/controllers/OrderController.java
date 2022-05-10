@@ -7,6 +7,7 @@ import com.models.User;
 import com.services.OrderService;
 import com.services.UserService;
 import org.aspectj.weaver.ast.Or;
+import org.hibernate.annotations.DynamicUpdate;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -126,5 +127,35 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @PutMapping(value = "")
+    public ResponseEntity<HashMap> updateCurrentOrder(String token, String status) throws JSONException {
+        JWebToken tk = new TokenManager().check(token);
+        HashMap res = new HashMap();
+        if (tk == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        User usr = userService.getUserByIdAsUser(Long.parseLong(tk.getSubject()));
+
+        if(usr.getActiveOrder()==null){
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+
+        Order ord = orderService.findOrderById(usr.getActiveOrder());
+        if(usr.getType()=="driver"){
+            ord.setStatus(status);
+            orderService.saveOrder(ord);
+
+            usr.setActiveOrder(null);
+            userService.saveUser(usr);
+
+            User client = userService.getUserByIdAsUser(ord.getClientId());
+            client.setActiveOrder(null);
+            userService.saveUser(client);
+
+            res.put("result","ok");
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 }
