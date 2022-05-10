@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashMap;
 
 @Table(name = "users")
 @Entity
@@ -41,5 +42,17 @@ public class User implements Backupable {
     @Override
     public String toString() {
         return "";
+    }
+
+    @Override
+    public HashMap toHashMap(){
+        HashMap usr = new HashMap();
+        usr.put("id",this.id);
+        usr.put("firstName",this.firstName);
+        usr.put("lastName",this.lastName);
+        usr.put("type",this.type);
+        usr.put("activeOrder",this.activeOrder);
+
+        return usr;
     }
 }

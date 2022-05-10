@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashMap;
 
 @Entity
 @Table(name = "orders")
@@ -42,4 +43,19 @@ public class Order implements Backupable {
 
     @Column(name = "status")
     private String status;
+
+    @Override
+    public HashMap toHashMap() {
+        HashMap order = new HashMap();
+        order.put("id",this.id);
+        order.put("clientId",this.clientId);
+        order.put("driverId",this.driverId);
+        order.put("fromAddress",this.fromAddress);
+        order.put("toAddress",this.toAddress);
+        order.put("cost",this.cost);
+        order.put("startTime",this.startTime);
+        order.put("endTime",this.endTime);
+        order.put("status",this.status);
+        return order;
+    }
 }

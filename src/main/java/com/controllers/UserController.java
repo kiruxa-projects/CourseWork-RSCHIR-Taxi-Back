@@ -1,6 +1,7 @@
 package com.controllers;
 
 import com.JWebToken;
+import com.TokenManager;
 import com.models.User;
 import com.services.UserService;
 import org.json.JSONException;
@@ -26,26 +27,24 @@ public class UserController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<User> getUser(String token) throws JSONException, NoSuchAlgorithmException {
-        if (token == null)
+    public ResponseEntity<HashMap> getUser(String token) throws JSONException {
+        JWebToken tk= new TokenManager().check(token);
+        if (tk ==null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        JWebToken tk = new JWebToken(token);
-        System.out.println(tk.isValid());
-        if (!tk.isValid()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         Long id = Long.parseLong(tk.getSubject());
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        HashMap user = userService.getUserById(id);
+        HashMap res =new HashMap();
+        res.put("result",user);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping(value = "getToken")
     public ResponseEntity<HashMap> getAllWorkers(String login, String password) {
-        String token = userService.generateUserToken(login, password);
-        if (token != null) {
+        HashMap data = userService.generateUserToken(login, password);
+        if (data != null) {
             HashMap resp = new HashMap();
-            resp.put("token",token);
+            resp.put("result",data);
             return new ResponseEntity<>(resp, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
