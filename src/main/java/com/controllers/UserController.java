@@ -35,7 +35,7 @@ public class UserController {
         Long id = Long.parseLong(tk.getSubject());
         HashMap user = userService.getUserById(id);
         HashMap res =new HashMap();
-        res.put("result",user);
+        res.put("response",user);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
         HashMap data = userService.generateUserToken(login, password);
         if (data != null) {
             HashMap resp = new HashMap();
-            resp.put("result",data);
+            resp.put("response",data);
             return new ResponseEntity<>(resp, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

@@ -22,13 +22,13 @@ import java.util.List;
 public class OrderService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
-    private final SessionFactory factory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, SessionFactory factory) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, SessionFactory sessionFactory) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
-        this.factory = factory;
+        this.sessionFactory = sessionFactory;
     }
 
     @Transactional
@@ -37,8 +37,25 @@ public class OrderService {
     }
 
     @Transactional
+    public Long getNextId(){
+        if (orderRepository.getMaxId() == null) {
+            return 0L;
+        }
+        return orderRepository.getMaxId() + 1;
+    }
+
+    @Transactional
+    public boolean deleteOrder(Order ord){
+        orderRepository.delete(ord);
+        return true;
+    }
+
+    @Transactional
+    public Order findOrderById(long id){return orderRepository.findOrderById(id);}
+
+    @Transactional
     public List<Order> filter(String column, String pattern, Long userId, String userType) {
-        Session session = factory.openSession();
+        Session session = sessionFactory.openSession();
         CriteriaBuilder criteria = session.getCriteriaBuilder();
         CriteriaQuery<Order> orderCriteriaQuery = criteria.createQuery(Order.class);
         Root<Order> orderRoot = orderCriteriaQuery.from(Order.class);
@@ -60,5 +77,10 @@ public class OrderService {
         return query.getResultList();
     }
 
+    @Transactional
+    public boolean saveOrder(Order ord){
+        orderRepository.save(ord);
+        return true;
+    }
 
 }

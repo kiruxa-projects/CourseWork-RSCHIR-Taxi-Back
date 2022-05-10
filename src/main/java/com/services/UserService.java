@@ -33,6 +33,18 @@ public class UserService {
     }
 
     @Transactional
+    public boolean saveUser(User usr){
+         userRepository.save(usr);
+         return true;
+    }
+
+
+    @Transactional
+    public User getUserByIdAsUser(Long id){
+        return userRepository.findUserById(id);
+    }
+
+    @Transactional
     public HashMap getUserById(Long id) {
         HashMap result = userRepository.findUserById(id).toHashMap();
         if(result.get("type").equals("driver")){
