@@ -74,6 +74,7 @@ public class OrderController {
             ord.setCost(cost);
             ord.setClientId(Long.parseLong(tk.getSubject()));
             ord.setToAddress(toAddress);
+            ord.setStartTime(System.currentTimeMillis() / 1000L);
             ord.setFromAddress(fromAddress);
             ord.setId(orderService.getNextId());
             ord.setStatus("created");
@@ -93,7 +94,7 @@ public class OrderController {
             ord.setStatus("active");
             ord.setStartTime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
             orderService.saveOrder(ord);
-            res.put("result", ord);
+            res.put("response", ord);
             usr1.setActiveOrder(ord.getId());
             userService.saveUser(usr1);
             return new ResponseEntity<>(res, HttpStatus.OK);
@@ -101,7 +102,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping(value = "")
+    @GetMapping(value = "/delete")
     public ResponseEntity<HashMap> deleteOrder(String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
@@ -153,7 +154,7 @@ public class OrderController {
             client.setActiveOrder(null);
             userService.saveUser(client);
 
-            res.put("result","ok");
+            res.put("response","ok");
             return new ResponseEntity<>(res, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
