@@ -22,6 +22,8 @@ import java.util.List;
 public class OrderService {
     private OrderRepository orderRepository;
     private UserRepository userRepository;
+    Session session;
+
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -29,6 +31,7 @@ public class OrderService {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.sessionFactory = sessionFactory;
+        this.session = sessionFactory.openSession();
     }
 
     @Transactional
@@ -37,7 +40,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long getNextId(){
+    public Long getNextId() {
         if (orderRepository.getMaxId() == null) {
             return 0L;
         }
@@ -45,25 +48,27 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean deleteOrder(Order ord){
+    public boolean deleteOrder(Order ord) {
         orderRepository.delete(ord);
         return true;
     }
 
     @Transactional
-    public Order findOrderById(long id){return orderRepository.findOrderById(id);}
+    public Order findOrderById(long id) {
+        return orderRepository.findOrderById(id);
+    }
 
-    @Transactional
     public List<Order> filter(String column, String pattern, Long userId, String userType) {
-        Session session = sessionFactory.openSession();
-        CriteriaBuilder criteria = session.getCriteriaBuilder();
+        this.session.close();
+        this.session=sessionFactory.openSession();
+        CriteriaBuilder criteria = this.session.getCriteriaBuilder();
         CriteriaQuery<Order> orderCriteriaQuery = criteria.createQuery(Order.class);
         Root<Order> orderRoot = orderCriteriaQuery.from(Order.class);
-        if(userType.equals("client")){
+        if (userType.equals("client")) {
             orderCriteriaQuery.select(orderRoot).where(
                     criteria.and(criteria.equal(orderRoot.get(column), pattern), criteria.equal(orderRoot.get("clientId"), userId))
             );
-        }else{
+        } else {
             System.out.println("ff");
             orderCriteriaQuery.select(orderRoot).where(
                     criteria.or(
@@ -73,12 +78,12 @@ public class OrderService {
             );
         }
 
-        Query query = session.createQuery(orderCriteriaQuery);
+        Query query = this.session.createQuery(orderCriteriaQuery);
         return query.getResultList();
     }
 
     @Transactional
-    public boolean saveOrder(Order ord){
+    public boolean saveOrder(Order ord) {
         orderRepository.save(ord);
         return true;
     }

@@ -4,11 +4,13 @@ import com.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    @Transactional
     User findUserById(Long id);
-
+    @Transactional
     User findUserByLoginAndPassword(String Login, String Password);
 
 //

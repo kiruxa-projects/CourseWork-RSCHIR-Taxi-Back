@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -44,13 +45,19 @@ public class OrderController {
     }
 
     @GetMapping("filter/{column}/{pattern}")
+    @Transactional
     public ResponseEntity<Map> filterWorkerWithPattern(@PathVariable("column") String column, @PathVariable("pattern") String pattern, String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Map<String, Object[]> response = new HashMap<>();
-        response.put("response", orderService.filter(column, pattern, Long.parseLong(tk.getSubject()), tk.getAudience().get(0)).toArray());
+        try{
+            response.put("response", orderService.filter(column, pattern, Long.parseLong(tk.getSubject()), tk.getAudience().get(0)).toArray());
+        }catch (Exception e){
+            System.out.println(e);
+            response.put("error", null);
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -130,7 +137,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }
 
-    @PutMapping(value = "")
+    @GetMapping(value = "/complete")
     public ResponseEntity<HashMap> updateCurrentOrder(String token, String status) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         HashMap res = new HashMap();
@@ -143,7 +150,7 @@ public class OrderController {
         }
 
         Order ord = orderService.findOrderById(usr.getActiveOrder());
-        if(usr.getType()=="driver"){
+        if(usr.getType().equals("driver")){
             ord.setStatus(status);
             orderService.saveOrder(ord);
 

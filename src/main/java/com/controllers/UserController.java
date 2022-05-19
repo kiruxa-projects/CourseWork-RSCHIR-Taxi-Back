@@ -2,7 +2,6 @@ package com.controllers;
 
 import com.JWebToken;
 import com.TokenManager;
-import com.models.User;
 import com.services.UserService;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -37,6 +34,22 @@ public class UserController {
         HashMap res =new HashMap();
         res.put("response",user);
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "getById")
+    public ResponseEntity<HashMap> getById(String token, Long id) {
+        JWebToken tk= new TokenManager().check(token);
+        if (tk ==null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+       HashMap usr = userService.getUserById(id);
+        if (usr != null) {
+            HashMap resp = new HashMap();
+            resp.put("response",usr);
+            return new ResponseEntity<>(resp, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping(value = "getToken")
