@@ -33,6 +33,14 @@ public class UserService {
     }
 
     @Transactional
+    public Long getNextId() {
+        if (userRepository.getMaxId() == null) {
+            return 0L;
+        }
+        return userRepository.getMaxId() + 1;
+    }
+
+    @Transactional
     public boolean saveUser(User usr){
          userRepository.save(usr);
          return true;

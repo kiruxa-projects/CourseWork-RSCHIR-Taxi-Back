@@ -12,7 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findUserById(Long id);
     @Transactional
     User findUserByLoginAndPassword(String Login, String Password);
-
+    @Query("SELECT MAX(id) FROM User")
+    Long getMaxId();
 //
 //    @Query("SELECT User FROM User WHERE login = ?1 AND password = ?2")
 //    User findUserByLoginAndPassword(String login, String password);
