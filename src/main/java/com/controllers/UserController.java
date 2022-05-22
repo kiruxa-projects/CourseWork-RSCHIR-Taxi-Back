@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @GetMapping(value = "getToken")
-    public ResponseEntity<HashMap> getAllWorkers(String login, String password) {
+    public ResponseEntity<HashMap> getAllUsers(String login, String password) {
         HashMap data = userService.generateUserToken(login, password);
         if (data != null) {
             HashMap resp = new HashMap();

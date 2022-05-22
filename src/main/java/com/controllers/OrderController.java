@@ -6,8 +6,6 @@ import com.models.Order;
 import com.models.User;
 import com.services.OrderService;
 import com.services.UserService;
-import org.aspectj.weaver.ast.Or;
-import org.hibernate.annotations.DynamicUpdate;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +44,7 @@ public class OrderController {
 
     @GetMapping("filter/{column}/{pattern}")
     @Transactional
-    public ResponseEntity<Map> filterWorkerWithPattern(@PathVariable("column") String column, @PathVariable("pattern") String pattern, String token) throws JSONException {
+    public ResponseEntity<Map> filterOrder(@PathVariable("column") String column, @PathVariable("pattern") String pattern, String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
