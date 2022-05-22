@@ -1,3 +1,4 @@
-FROM java:8
-ADD target/TaxiBack.jar /opt/TaxiBack/TaxiBack.jar
-CMD ["java","-jar","/opt/TaxiBack/TaxiBack.jar"]
+FROM openjdk:11
+EXPOSE 8080
+ADD target/TaxiBack.jar TaxiBack.jar
+ENTRYPOINT ["java", "-jar", "TaxiBack.jar"]
