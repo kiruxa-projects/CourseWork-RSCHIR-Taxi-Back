@@ -1,8 +1,6 @@
 package com;
 
-import org.json.JSONException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.security.JWebToken;
 
 public class TokenManager {
     public JWebToken check(String token){

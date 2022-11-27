@@ -1,6 +1,6 @@
 package com.controllers;
 
-import com.JWebToken;
+import com.security.JWebToken;
 import com.TokenManager;
 import com.models.User;
 import com.services.UserService;

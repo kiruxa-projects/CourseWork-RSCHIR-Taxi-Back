@@ -1,6 +1,6 @@
 package com.services;
 
-import com.JWebToken;
+import com.security.JWebToken;
 import com.models.User;
 import com.repositories.CarRepository;
 import com.repositories.OrderRepository;

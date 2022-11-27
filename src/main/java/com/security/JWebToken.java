@@ -1,4 +1,4 @@
-package com;
+package com.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -16,7 +16,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.context.annotation.Bean;
 
 /**
  *
