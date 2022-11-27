@@ -38,8 +38,8 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<HashMap> createNewUser(String firstName, String lastName, String login, String password) {
+    @PostMapping("register")
+    public ResponseEntity<HashMap> registerUser(String firstName, String lastName, String login, String password) {
         HashMap init = userService.generateUserToken(login, password);
         if(init==null){
             User usr = new User();
@@ -60,24 +60,24 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "getById")
-    public ResponseEntity<HashMap> getById(String token, Long id) {
-        JWebToken tk = new TokenManager().check(token);
-        if (tk == null)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//    @GetMapping(value = "getById")
+//    public ResponseEntity<HashMap> getById(String token, Long id) {
+//        JWebToken tk = new TokenManager().check(token);
+//        if (tk == null)
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//
+//        HashMap usr = userService.getUserById(id);
+//        if (usr != null) {
+//            HashMap resp = new HashMap();
+//            resp.put("response", usr);
+//            return new ResponseEntity<>(resp, HttpStatus.CREATED);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
 
-        HashMap usr = userService.getUserById(id);
-        if (usr != null) {
-            HashMap resp = new HashMap();
-            resp.put("response", usr);
-            return new ResponseEntity<>(resp, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @GetMapping(value = "getToken")
-    public ResponseEntity<HashMap> getAllUsers(String login, String password) {
+    @GetMapping(value = "auth")
+    public ResponseEntity<HashMap> authUser(String login, String password) {
         HashMap data = userService.generateUserToken(login, password);
         if (data != null) {
             HashMap resp = new HashMap();

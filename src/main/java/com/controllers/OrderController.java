@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<HashMap> getUser(String token) throws JSONException {
+    public ResponseEntity<HashMap> getListOfOrders(String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -136,7 +136,7 @@ public class OrderController {
     }
 
     @PutMapping(value = "/complete")
-    public ResponseEntity<HashMap> updateCurrentOrder(String token, String status) throws JSONException {
+    public ResponseEntity<HashMap> completeCurrentOrder(String token, String status) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         HashMap res = new HashMap();
         if (tk == null)
