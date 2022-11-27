@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  postgres:
+    image: 'postgres:11.1-alpine'
+    restart: on-failure
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=14112002
+      - POSTGRES_DB=CourseWorkTaxi
+    ports:
+      - '5432:5432'
+
+  server:
+    depends_on:
+      - postgres
+    image: course-work-taxi/back
+    build: ./
+    ports:
+      - '5000:8080'
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3001:8080

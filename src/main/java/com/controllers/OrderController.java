@@ -107,8 +107,8 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/delete")
-    public ResponseEntity<HashMap> deleteOrder(String token) throws JSONException {
+    @PutMapping(value = "cancel")
+    public ResponseEntity<HashMap> cancelCurrentOrder(String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -135,7 +135,7 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }
 
-    @GetMapping(value = "/complete")
+    @PutMapping(value = "/complete")
     public ResponseEntity<HashMap> updateCurrentOrder(String token, String status) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         HashMap res = new HashMap();
