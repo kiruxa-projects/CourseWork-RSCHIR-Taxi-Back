@@ -23,7 +23,7 @@ public class CarController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<HashMap> getAllCars(String token) throws JSONException {
+    public ResponseEntity<HashMap> getAllCars(@RequestHeader("Authorization") String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -35,7 +35,7 @@ public class CarController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<HashMap> getCarById(String token, Long id) throws JSONException {
+    public ResponseEntity<HashMap> getCarById(@RequestHeader("Authorization") String token, Long id) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -48,7 +48,7 @@ public class CarController {
     }
 
     @PostMapping(value="")
-    public ResponseEntity<HashMap> addCar(String token, String model, String color, String number, String type, String price) throws JSONException {
+    public ResponseEntity<HashMap> addCar(@RequestHeader("Authorization") String token, String model, String color, String number) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -65,7 +65,7 @@ public class CarController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HashMap> deleteCar(String token, Long id) throws JSONException {
+    public ResponseEntity<HashMap> deleteCar(@RequestHeader("Authorization") String token, Long id) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

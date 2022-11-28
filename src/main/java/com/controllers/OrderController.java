@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<HashMap> getListOfOrders(String token) throws JSONException {
+    public ResponseEntity<HashMap> getListOfOrders(@RequestHeader("Authorization") String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -43,7 +43,7 @@ public class OrderController {
 
     @GetMapping("filter/{column}/{pattern}")
     @Transactional
-    public ResponseEntity<Map> filterOrder(@PathVariable("column") String column, @PathVariable("pattern") String pattern, String token) throws JSONException {
+    public ResponseEntity<Map> filterOrder(@PathVariable("column") String column, @PathVariable("pattern") String pattern, @RequestHeader("Authorization") String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -62,7 +62,7 @@ public class OrderController {
 //    Но это сделано ради упрощения.
 
     @PostMapping(value = "")
-    public ResponseEntity<HashMap> createOrder(String token, String fromAddress, String toAddress, Long cost, Long startTime, Long endTime, Long id) throws JSONException {
+    public ResponseEntity<HashMap> createOrder(@RequestHeader("Authorization") String token, String fromAddress, String toAddress, Long cost, Long id) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -107,7 +107,7 @@ public class OrderController {
     }
 
     @PutMapping(value = "cancel")
-    public ResponseEntity<HashMap> cancelCurrentOrder(String token) throws JSONException {
+    public ResponseEntity<HashMap> cancelCurrentOrder(@RequestHeader("Authorization") String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         if (tk == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -135,7 +135,7 @@ public class OrderController {
     }
 
     @PutMapping(value = "/complete")
-    public ResponseEntity<HashMap> completeCurrentOrder(String token, String status) throws JSONException {
+    public ResponseEntity<HashMap> completeCurrentOrder(@RequestHeader("Authorization") String token) throws JSONException {
         JWebToken tk = new TokenManager().check(token);
         HashMap res = new HashMap();
         if (tk == null)
@@ -148,7 +148,7 @@ public class OrderController {
 
         Order ord = orderService.findOrderById(usr.getActiveOrder());
         if(usr.getType().equals("driver")){
-            ord.setStatus(status);
+            ord.setStatus("completed");
             orderService.saveOrder(ord);
 
             usr.setActiveOrder(null);

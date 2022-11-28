@@ -7,11 +7,13 @@ public class TokenManager {
         JWebToken tk = null;
         if(token==null)
             return null;
+        String[] parts = token.split(" ");
         try {
-            tk = new JWebToken(token);
+            tk = new JWebToken(parts[1]);
         } catch (Exception e) {
             return null;
         }
+
         try {
             if (!tk.isValid()) {
                 return null;

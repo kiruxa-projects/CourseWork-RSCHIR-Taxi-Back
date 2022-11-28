@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  postgres:
+  db:
     image: 'postgres:11.1-alpine'
     restart: on-failure
     volumes:
@@ -14,8 +14,7 @@ services:
 
   server:
     depends_on:
-      - postgres
-    image: course-work-taxi/back
+      - db
     build: ./
     ports:
       - '5000:8080'
